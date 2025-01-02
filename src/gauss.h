@@ -15,6 +15,7 @@ void substract_rows(Matrix* mat, Matrix* b, int d);
 /**
  * Zwraca 0 - elimnacja zakonczona sukcesem
  * Zwraca 1 - macierz osobliwa - dzielenie przez 0
+ * Zwraca 2 - różna liczba wierszy i kolumn
  */
 int eliminate(Matrix *mat, Matrix *b);
 

@@ -53,9 +53,14 @@ void substract_rows(Matrix* mat, Matrix* b, int d) {
 /**
  * Zwraca 0 - eliminacja zako�czona sukcesem
  * Zwraca 1 - macierz osobliwa - dzielenie przez 0
+ * Zwraca 2 - różna liczba wierszy i kolumn
  */
 int eliminate(Matrix *mat, Matrix *b)
 {
+	// obsłuża przypadek dla różnej ilości wierszy i kolumn
+	if(mat->c != mat->r)
+		return 2;
+
 	// dla każdej kolumny (indeksów diagonala)
     for(int d = 0; d < mat->r; d++)
 	{
@@ -68,10 +73,6 @@ int eliminate(Matrix *mat, Matrix *b)
 		// obsłuża przypadek dla zera i zwraca 1
 		if(mat->data[d][d] == 0)
 			return 1;
-
-        // Obs�uga przypadku dla zera i zwraca 1
-        if (mat->data[d][d] == 0)
-            return 1;
 
         // zmienia warto�ci wierszy
         substract_rows(mat, b, d);

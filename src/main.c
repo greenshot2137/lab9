@@ -17,14 +17,20 @@ int main(int argc, char ** argv) {
 	printToScreen(b);
 
 	res = eliminate(A,b);
-	x = createMatrix(b->r, 1);
+	if (res == 1) {
+		fprintf(stderr, "Dzielenie przez zero. Macierz nie jest odwracalna.\n");
+	} else if(res == 2) {
+		fprintf(stderr, "Różna ilość wierszy i kolumn.\n");
+	} else {
+		x = createMatrix(b->r, 1);
 	if (x != NULL) {
 		res = backsubst(x,A,b);
 
 		printToScreen(x);
 	  freeMatrix(x);
 	} else {
-					fprintf(stderr,"Błąd! Nie mogłem utworzyć wektora wynikowego x.\n");
+		fprintf(stderr,"Błąd! Nie mogłem utworzyć wektora wynikowego x.\n");
+	}
 	}
 
 	freeMatrix(A);
