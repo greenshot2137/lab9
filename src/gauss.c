@@ -2,38 +2,59 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-// zmienia warto≈õci wierszy dla ka≈ºdego miejsca do wyzerowania
-void substract_rows(Matrix* mat, Matrix* b, int d)
-{
-	for(int r = d + 1; r < mat->r; r++)
-	{
-		// oblicza skalar
-		double scalar = mat->data[r][d] / mat->data[d][d];
+// Zamienia dwa wiersze w macierzy
+void swap_rows(Matrix* mat, Matrix* b, int row1, int row2) {
+    double* tempRow = mat->data[row1];
+    mat->data[row1] = mat->data[row2];
+    mat->data[row2] = tempRow;
 
-		// zmienia warto≈õci wiersza r
-		for(int col = 0; col < mat->c; col++)
-			mat->data[r][col] -= scalar * mat->data[d][col];
-		
-		b->data[r][0] -= scalar * b->data[d][0];
-	}
+    double tempB = b->data[row1][0];
+    b->data[row1][0] = b->data[row2][0];
+    b->data[row2][0] = tempB;
+}
+
+// zmienia wartoúci wierszy dla kaødego miejsca do wyzerowania
+void substract_rows(Matrix* mat, Matrix* b, int d) {
+    for (int r = d + 1; r < mat->r; r++) {
+        // oblicza skalar
+        double scalar = mat->data[r][d] / mat->data[d][d];
+
+        // zmienia wartoúci wiersza r
+        for (int col = 0; col < mat->c; col++)
+            mat->data[r][col] -= scalar * mat->data[d][col];
+
+        b->data[r][0] -= scalar * b->data[d][0];
+    }
 }
 
 /**
- * Zwraca 0 - elimnacja zakonczona sukcesem
+ * Zwraca 0 - eliminacja zakoÒczona sukcesem
  * Zwraca 1 - macierz osobliwa - dzielenie przez 0
  */
-int eliminate(Matrix *mat, Matrix *b)
-{
-	// dla ka≈ºdej kolumny (indeks√≥w diagonala)
-    for(int d = 0; d < mat->r; d++)
-	{
-		// obs≈Çu≈ºa przypadek dla zera i zwraca 1
-		if(mat->data[d][d] == 0)
-			return 1;
+int eliminate(Matrix* mat, Matrix* b) {
+    // dla kaødej kolumny (indeksÛw diagonala)
+    for (int d = 0; d < mat->r; d++) {
+        // WybÛr elementu g≥Ûwnego
+        int maxRow = d;
+        for (int r = d + 1; r < mat->r; r++) {
+            if (fabs(mat->data[r][d]) > fabs(mat->data[maxRow][d])) {
+                maxRow = r;
+            }
+        }
 
-		// zmienia warto≈õci wierszy
-		substract_rows(mat, b, d);
-	}
+        // Zamiana wierszy, jeúli potrzeba
+        if (maxRow != d) {
+            swap_rows(mat, b, d, maxRow);
+        }
 
-	return 0;
+        // Obs≥uga przypadku dla zera i zwraca 1
+        if (mat->data[d][d] == 0)
+            return 1;
+
+        // zmienia wartoúci wierszy
+        substract_rows(mat, b, d);
+    }
+
+    return 0;
 }
+
